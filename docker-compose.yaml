@@ -1,0 +1,42 @@
+version: '3.9'
+
+services:
+  user-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: shvark_user_service
+    volumes:
+      - user_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5433:5432"
+
+  user-service:
+    build: 
+      context: ./services/user-service
+    depends_on:
+      - user-db
+    ports:
+      - "50052:50052"
+    restart: on-failure
+
+  sso-service:
+    build: 
+      context: ./services/sso-service
+    depends_on:
+      - user-service
+    ports:
+      - "50051:50051"
+    restart: on-failure
+  
+  # api-gateway:
+  #   build: ./api-gateway
+  #   depends_on:
+  #     - sso-service
+  #   ports:
+  #     - "8080:8080"
+
+volumes:
+  user_pgdata:
