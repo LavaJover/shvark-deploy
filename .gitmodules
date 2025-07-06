@@ -4,3 +4,15 @@
 [submodule "services/sso-service"]
 	path = services/sso-service
 	url = https://github.com/LavaJover/shvark-sso-service
+[submodule "services/authz-service"]
+	path = services/authz-service
+	url = https://github.com/LavaJover/shvark-authz-service
+[submodule "services/banking-service"]
+	path = services/banking-service
+	url = https://github.com/LavaJover/shvark-banking-service
+[submodule "services/order-service"]
+	path = services/order-service
+	url = https://github.com/LavaJover/shvark-order-service
+[submodule "services/api-gateway"]
+	path = services/api-gateway
+	url = https://github.com/LavaJover/shvark-api-gateway
