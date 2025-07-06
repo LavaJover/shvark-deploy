@@ -12,6 +12,54 @@ services:
       - user_pgdata:/var/lib/postgresql/data
     ports:
       - "5433:5432"
+    
+  banking-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: shvark_banking_service
+    volumes:
+      - banking_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5434:5432"
+
+  order-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: shvark_order_service
+    volumes:
+      - order_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5435:5432"
+
+  authz-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: shvark_authz_service
+    volumes:
+      - authz_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5436:5432"
+
+  tether-wallet-db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: admin
+      POSTGRES_DB: shvark_tether_wallet_service
+    volumes:
+      - wallet_pgdata:/var/lib/postgresql/data
+    ports:
+      - "5437:5432"
 
   user-service:
     build: 
@@ -30,13 +78,66 @@ services:
     ports:
       - "50051:50051"
     restart: on-failure
+
+  banking-service:
+    build: 
+      context: ./services/banking-service
+    depends_on:
+      - banking-db
+    ports:
+      - "50057:50057"
+    restart: on-failure
+
+  authz-service:
+    build: 
+      context: ./services/authz-service
+    depends_on:
+      - authz-db
+    ports:
+      - "50054:50054"
+    restart: on-failure
+
+  order-service:
+    build: 
+      context: ./services/order-service
+    depends_on:
+      - order-db
+      - banking-service
+    ports:
+      - "50058:50058"
+    restart: on-failure
   
-  # api-gateway:
-  #   build: ./api-gateway
-  #   depends_on:
-  #     - sso-service
-  #   ports:
-  #     - "8080:8080"
+  api-gateway:
+    build: 
+      context: ./services/api-gateway
+    depends_on:
+      - user-service
+      - sso-service
+      - authz-service
+      - banking-service
+      - order-service
+    ports:
+      - "8080:8080"
+
+  shvark-front:
+    build:
+      context: ./services/shvark-front
+    depends_on:
+      - api-gateway
+    ports:
+      - "90:80"
+
+  tether-wallet-service:
+    build:
+      context: ./services/tether-wallet-service
+    depends_on:
+      - tether-wallet-db
+    ports:
+      - "3000:3000"
 
 volumes:
   user_pgdata:
+  order_pgdata:
+  banking_pgdata:
+  authz_pgdata:
+  wallet_pgdata:

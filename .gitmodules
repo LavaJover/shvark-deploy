@@ -19,3 +19,6 @@
 [submodule "services/shvark-front"]
 	path = services/shvark-front
 	url = https://github.com/LavaJover/shvark-pay-front
+[submodule "services/tether-wallet-service"]
+	path = services/tether-wallet-service
+	url = https://github.com/LavaJover/tether-wallet-service
