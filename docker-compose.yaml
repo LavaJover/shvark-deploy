@@ -198,13 +198,21 @@ services:
     ports:
       - "8080:8080"
 
-  shvark-front:
+  # shvark-front:
+  #   build:
+  #     context: ./services/shvark-front
+  #   depends_on:
+  #     - api-gateway
+  #   ports:
+  #     - "80:80"
+
+  obss-front:
     build:
-      context: ./services/shvark-front
+      context: ./services/obss-front
     depends_on:
-      - api-gateway
+    - api-gateway
     ports:
-      - "80:80"
+    - "80:80"
 
   tether-wallet-service:
     build:
