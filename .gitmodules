@@ -28,3 +28,6 @@
 [submodule "services/shvark-arbitrage-bot"]
 	path = services/shvark-arbitrage-bot
 	url = https://github.com/LavaJover/shvark-arbitrage-bot
+[submodule "services/obss-front"]
+	path = services/obss-front
+	url = https://github.com/LavaJover/obss-front
